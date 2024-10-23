@@ -6,89 +6,89 @@ using Microsoft.Extensions.Logging;
 
 namespace LibraryManagementSystem.Infrastructure.Repositories
 {
-    public class BookRepository : IBookRepository
+    public class UserRepository : IUserRepository
     {
         private readonly LibraryDbContext _context;
-        private readonly ILogger<BookRepository> _logger;
+        private readonly ILogger<UserRepository> _logger;
 
-        public BookRepository(LibraryDbContext context, ILogger<BookRepository> logger)
+        public UserRepository(LibraryDbContext context, ILogger<UserRepository> logger)
         {
             _context = context;
             _logger = logger;
         }
 
-        public async Task<IEnumerable<Book>> GetAllBooksAsync()
+        public async Task<IEnumerable<User>> GetAllUsersAsync()
         {
             try
             {
-                return await _context.Books.ToListAsync();
+                return await _context.Users.ToListAsync();
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error retrieving all books");
+                _logger.LogError(ex, "Error retrieving all users");
                 throw; 
             }
         }
 
-        public async Task<Book> GetBookByIdAsync(int id)
+        public async Task<User> GetUserByIdAsync(int id)
         {
             try
             {
-                return await _context.Books.FindAsync(id);
+                return await _context.Users.FindAsync(id);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, $"Error retrieving book with ID {id}");
+                _logger.LogError(ex, $"Error retrieving user with ID {id}");
                 throw; 
             }
         }
 
-        public async Task AddBookAsync(Book book)
+        public async Task AddUserAsync(User user)
         {
             try
             {
-                await _context.Books.AddAsync(book);
+                await _context.Users.AddAsync(user);
                 await _context.SaveChangesAsync();
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error adding a new book");
+                _logger.LogError(ex, "Error adding a new user");
                 throw; 
             }
         }
 
-        public async Task UpdateBookAsync(Book book)
+        public async Task UpdateUserAsync(User user)
         {
             try
             {
-                _context.Books.Update(book);
+                _context.Users.Update(user);
                 await _context.SaveChangesAsync();
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error updating the book");
+                _logger.LogError(ex, "Error updating the user");
                 throw; 
             }
         }
 
-        public async Task DeleteBookAsync(int id)
+        public async Task DeleteUserAsync(int id)
         {
             try
             {
-                var book = await GetBookByIdAsync(id);
-                if (book != null)
+                var user = await GetUserByIdAsync(id);
+                if (user != null)
                 {
-                    _context.Books.Remove(book);
+                    _context.Users.Remove(user);
                     await _context.SaveChangesAsync();
                 }
                 else
                 {
-                    _logger.LogWarning($"Book with ID {id} not found for deletion");
+                    _logger.LogWarning($"User with ID {id} not found for deletion");
                 }
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, $"Error deleting book with ID {id}");
+                _logger.LogError(ex, $"Error deleting user with ID {id}");
                 throw; 
             }
         }
