@@ -2,12 +2,12 @@
 
 namespace LibraryManagementSystem.Core.Interfaces.Repositories
 {
-    public interface IUserRepository
+    public interface IUsersRepository
     {
         Task<IEnumerable<User>> GetAllUsersAsync();
         Task<User> GetUserByIdAsync(int id);
-        Task AddUserAsync(User user);
-        Task UpdateUserAsync(User user);
+        Task<User> AddUserAsync(User user);
+        Task UpdateUserAsync(int id, User user);
         Task DeleteUserAsync(int id);
     }
 

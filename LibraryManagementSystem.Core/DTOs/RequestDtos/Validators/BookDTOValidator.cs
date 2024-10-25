@@ -1,14 +1,12 @@
 ﻿using FluentValidation;
+using LibraryManagementSystem.Core.DTOs.RequestDtos;
 
 namespace LibraryManagementSystem.Core.DTOs.Validators
 {
-    public class BookDTOValidator : AbstractValidator<BookDTO>
+    public class BookDTOValidator : AbstractValidator<BookRequestDto>
     {
         public BookDTOValidator()
         {
-            RuleFor(x => x.Id)
-            .GreaterThan(0).WithMessage("Id must be a valid positive integer.");
-
             RuleFor(x => x.Title)
                 .NotEmpty().WithMessage("Title is required.")
                 .Length(2, 100).WithMessage("Title must be between 2 and 100 characters.");

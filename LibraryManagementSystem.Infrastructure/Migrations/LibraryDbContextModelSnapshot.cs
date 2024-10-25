@@ -47,16 +47,6 @@ namespace LibraryManagementSystem.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Books");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Author = "John Smith",
-                            IsBorrowed = true,
-                            PublishedDate = new DateTime(2020, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Title = "C# Programming"
-                        });
                 });
 
             modelBuilder.Entity("LibraryManagementSystem.Core.Models.Loan", b =>
@@ -73,32 +63,21 @@ namespace LibraryManagementSystem.Infrastructure.Migrations
                     b.Property<DateTime>("DueDate")
                         .HasColumnType("timestamp without time zone");
 
+                    b.Property<bool>("IsReturned")
+                        .HasColumnType("boolean");
+
                     b.Property<DateTime>("LoanDate")
                         .HasColumnType("timestamp without time zone");
 
                     b.Property<DateTime?>("ReturnDate")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<int>("UserId")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("BookId");
-
-                    b.HasIndex("UserId");
-
                     b.ToTable("Loans");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            BookId = 1,
-                            DueDate = new DateTime(2024, 11, 6, 13, 57, 24, 460, DateTimeKind.Local).AddTicks(232),
-                            LoanDate = new DateTime(2024, 10, 23, 13, 57, 24, 460, DateTimeKind.Local).AddTicks(154),
-                            UserId = 1
-                        });
                 });
 
             modelBuilder.Entity("LibraryManagementSystem.Core.Models.User", b =>
@@ -124,30 +103,6 @@ namespace LibraryManagementSystem.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Users");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            EmailAddress = "john.doe@example.com",
-                            FirstName = "John",
-                            LastName = "Doe"
-                        });
-                });
-
-            modelBuilder.Entity("LibraryManagementSystem.Core.Models.Loan", b =>
-                {
-                    b.HasOne("LibraryManagementSystem.Core.Models.Book", null)
-                        .WithMany()
-                        .HasForeignKey("BookId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("LibraryManagementSystem.Core.Models.User", null)
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

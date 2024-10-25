@@ -6,12 +6,12 @@ using Microsoft.Extensions.Logging;
 
 namespace LibraryManagementSystem.Infrastructure.Repositories
 {
-    public class BookRepository : IBookRepository
+    public class BooksRepository : IBooksRepository
     {
         private readonly LibraryDbContext _context;
-        private readonly ILogger<BookRepository> _logger;
+        private readonly ILogger<BooksRepository> _logger;
 
-        public BookRepository(LibraryDbContext context, ILogger<BookRepository> logger)
+        public BooksRepository(LibraryDbContext context, ILogger<BooksRepository> logger)
         {
             _context = context;
             _logger = logger;
@@ -43,12 +43,14 @@ namespace LibraryManagementSystem.Infrastructure.Repositories
             }
         }
 
-        public async Task AddBookAsync(Book book)
+        public async Task<Book> AddBookAsync(Book book)
         {
             try
             {
                 await _context.Books.AddAsync(book);
                 await _context.SaveChangesAsync();
+
+                return book;
             }
             catch (Exception ex)
             {
@@ -57,10 +59,11 @@ namespace LibraryManagementSystem.Infrastructure.Repositories
             }
         }
 
-        public async Task UpdateBookAsync(Book book)
+        public async Task UpdateBookAsync(int id, Book book)
         {
             try
             {
+                book.Id = id;
                 _context.Books.Update(book);
                 await _context.SaveChangesAsync();
             }

@@ -1,6 +1,32 @@
-@LibraryManagementSystem.API_HostAddress = http://localhost:5022
+### Get all books
+GET http://localhost:5000/api/Book
+Content-Type: application/json
 
-GET {{LibraryManagementSystem.API_HostAddress}}/weatherforecast/
-Accept: application/json
+### Get a book by ID
+GET http://localhost:5000/api/Book/1
+Content-Type: application/json
 
-###
+### Create a new book
+POST http://localhost:5000/api/Book
+Content-Type: application/json
+
+{
+  "title": "Sample Book Title",
+  "author": "Sample Author",
+  "publishedYear": 2024
+}
+
+### Update a book
+PUT http://localhost:5000/api/Book/1
+Content-Type: application/json
+
+{
+  "id": 1,
+  "title": "Updated Book Title",
+  "author": "Updated Author",
+  "publishedYear": 2024
+}
+
+### Delete a book
+DELETE http://localhost:5000/api/Book/1
+Content-Type: application/json

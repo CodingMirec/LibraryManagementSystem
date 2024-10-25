@@ -1,0 +1,7 @@
+<Project>
+  <PropertyGroup>
+    <ExcludeFromCodeCoverage>
+        **/Core/*
+    </ExcludeFromCodeCoverage>
+  </PropertyGroup>
+</Project>

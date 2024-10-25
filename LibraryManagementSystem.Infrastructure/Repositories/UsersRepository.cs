@@ -6,12 +6,12 @@ using Microsoft.Extensions.Logging;
 
 namespace LibraryManagementSystem.Infrastructure.Repositories
 {
-    public class UserRepository : IUserRepository
+    public class UsersRepository : IUsersRepository
     {
         private readonly LibraryDbContext _context;
-        private readonly ILogger<UserRepository> _logger;
+        private readonly ILogger<UsersRepository> _logger;
 
-        public UserRepository(LibraryDbContext context, ILogger<UserRepository> logger)
+        public UsersRepository(LibraryDbContext context, ILogger<UsersRepository> logger)
         {
             _context = context;
             _logger = logger;
@@ -43,12 +43,14 @@ namespace LibraryManagementSystem.Infrastructure.Repositories
             }
         }
 
-        public async Task AddUserAsync(User user)
+        public async Task<User> AddUserAsync(User user)
         {
             try
             {
                 await _context.Users.AddAsync(user);
                 await _context.SaveChangesAsync();
+
+                return user;
             }
             catch (Exception ex)
             {
@@ -57,10 +59,11 @@ namespace LibraryManagementSystem.Infrastructure.Repositories
             }
         }
 
-        public async Task UpdateUserAsync(User user)
+        public async Task UpdateUserAsync(int id, User user)
         {
             try
             {
+                user.Id = id;
                 _context.Users.Update(user);
                 await _context.SaveChangesAsync();
             }

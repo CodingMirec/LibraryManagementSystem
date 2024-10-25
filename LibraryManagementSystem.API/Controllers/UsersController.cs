@@ -7,40 +7,29 @@ namespace LibraryManagementSystem.API.Controllers
 {
     [ApiController]
     [Route("api/v1/[controller]")]
-    public class BooksController : ControllerBase
+    public class UsersController : ControllerBase
     {
-        private readonly IBooksService _bookService;
+        private readonly IUsersService _userService;
 
-        public BooksController(IBooksService bookService)
+        public UsersController(IUsersService userService)
         {
-            _bookService = bookService;
+            _userService = userService;
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<BookResponseDto>>> GetBooks()
+        public async Task<ActionResult<IEnumerable<UserResponseDto>>> GetAllUsers()
         {
-            try
-            {
-                var books = await _bookService.GetAllBooksAsync();
-                return Ok(books);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
-            }
+            var users = await _userService.GetAllUsersAsync();
+            return Ok(users);
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<BookResponseDto>> GetBook(int id)
+        public async Task<ActionResult<UserResponseDto>> GetUserById(int id)
         {
             try
             {
-                var book = await _bookService.GetBookByIdAsync(id);
-                if (book == null)
-                {
-                    return NotFound();
-                }
-                return Ok(book);
+                var user = await _userService.GetUserByIdAsync(id);
+                return Ok(user);
             }
             catch (ArgumentException ex)
             {
@@ -53,17 +42,17 @@ namespace LibraryManagementSystem.API.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<BookResponseDto>> CreateBook([FromBody] BookRequestDto bookDto)
+        public async Task<ActionResult<UserResponseDto>> CreateUser([FromBody] UserRequestDto userDto)
         {
-            if (bookDto == null)
+            if (userDto == null)
             {
-                return BadRequest("Book data is invalid.");
+                return BadRequest("User data is invalid.");
             }
 
             try
             {
-                var createdBookResponse = await _bookService.AddBookAsync(bookDto);
-                return CreatedAtAction(nameof(GetBook), new { id = createdBookResponse.Id }, createdBookResponse);
+                var createdUser = await _userService.AddUserAsync(userDto);
+                return CreatedAtAction(nameof(GetUserById), new { id = createdUser.Id }, createdUser);
             }
             catch (ArgumentNullException ex)
             {
@@ -76,16 +65,16 @@ namespace LibraryManagementSystem.API.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateBook(int id, [FromBody] BookRequestDto bookDto)
+        public async Task<IActionResult> UpdateUser(int id, [FromBody] UserRequestDto userDto)
         {
-            if (bookDto == null)
+            if (userDto == null)
             {
-                return BadRequest("Book data is invalid or ID mismatch.");
+                return BadRequest("User data is invalid.");
             }
 
             try
             {
-                await _bookService.UpdateBookAsync(id, bookDto);
+                await _userService.UpdateUserAsync(id, userDto);
                 return NoContent();
             }
             catch (ArgumentException ex)
@@ -99,11 +88,11 @@ namespace LibraryManagementSystem.API.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteBook(int id)
+        public async Task<IActionResult> DeleteUser(int id)
         {
             try
             {
-                await _bookService.DeleteBookAsync(id);
+                await _userService.DeleteUserAsync(id);
                 return NoContent();
             }
             catch (ArgumentException ex)

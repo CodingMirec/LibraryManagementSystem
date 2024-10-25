@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
-using LibraryManagementSystem.Core.DTOs;
+using LibraryManagementSystem.Core.DTOs.RequestDtos;
+using LibraryManagementSystem.Core.DTOs.ResponseDtos;
 using LibraryManagementSystem.Core.Models;
 
 namespace LibraryManagementSystem.Infrastructure.Mappings
@@ -8,14 +9,27 @@ namespace LibraryManagementSystem.Infrastructure.Mappings
     {
         public MappingProfile()
         {
-            CreateMap<User, UserDTO>()
+            CreateMap<User, UserRequestDto>()
                 .ReverseMap();
 
-            CreateMap<Book, BookDTO>()
+            CreateMap<User, UserResponseDto>()
                 .ReverseMap();
 
-            CreateMap<Loan, LoanDTO>()
+            CreateMap<Loan, LoanRequestDto>()
                 .ReverseMap();
+
+            CreateMap<Loan, LoanResponseDto>()
+                .ReverseMap();
+
+            CreateMap<Book, BookRequestDto>()
+                .ReverseMap();
+
+            CreateMap<Book, BookResponseDto>()
+                .ReverseMap();
+
+            CreateMap<Loan, Loan>()
+                .ForMember(dest => dest.Id, opt => opt.Ignore()); 
+
         }
     }
 }

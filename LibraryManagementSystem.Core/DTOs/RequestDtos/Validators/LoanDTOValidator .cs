@@ -1,14 +1,12 @@
 ﻿using FluentValidation;
+using LibraryManagementSystem.Core.DTOs.RequestDtos;
 
 namespace LibraryManagementSystem.Core.DTOs.Validators
 {
-    public class LoanDTOValidator : AbstractValidator<LoanDTO>
+    public class LoanDTOValidator : AbstractValidator<LoanRequestDto>
     {
         public LoanDTOValidator()
         {
-            RuleFor(x => x.Id)
-            .GreaterThan(0).WithMessage("Id must be a valid positive integer.");
-
             RuleFor(x => x.BookId)
                 .GreaterThan(0).WithMessage("Book ID must be greater than zero.");
 

@@ -1,20 +1,24 @@
-﻿using LibraryManagementSystem.Core.Interfaces.Repositories;
+﻿using AutoMapper;
+using LibraryManagementSystem.Core.Interfaces.Repositories;
 using LibraryManagementSystem.Core.Models;
 using LibraryManagementSystem.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using System.Net;
 
 namespace LibraryManagementSystem.Infrastructure.Repositories
 {
-    public class LoanRepository : ILoanRepository
+    public class LoansRepository : ILoansRepository
     {
         private readonly LibraryDbContext _context;
-        private readonly ILogger<LoanRepository> _logger;
+        private readonly ILogger<LoansRepository> _logger;
+        private readonly IMapper _mapper;
 
-        public LoanRepository(LibraryDbContext context, ILogger<LoanRepository> logger)
+        public LoansRepository(LibraryDbContext context, ILogger<LoansRepository> logger, IMapper mapper)
         {
             _context = context;
             _logger = logger;
+            _mapper = mapper;
         }
 
         public async Task<IEnumerable<Loan>> GetAllLoansAsync()
@@ -43,25 +47,66 @@ namespace LibraryManagementSystem.Infrastructure.Repositories
             }
         }
 
-        public async Task AddLoanAsync(Loan loan)
+        public async Task<Loan> AddLoanAsync(Loan loan)
         {
+            using var transaction = await _context.Database.BeginTransactionAsync();
+
             try
             {
+                var book = await _context.Books.FindAsync(loan.BookId);
+                if (book == null)
+                {
+                    throw new KeyNotFoundException($"Book with ID {loan.BookId} does not exist.");
+                }
+
+                var user = await _context.Users.FindAsync(loan.UserId);
+                if (user == null)
+                {
+                    throw new KeyNotFoundException($"User with ID {loan.UserId} does not exist.");
+                }
+
                 await _context.Loans.AddAsync(loan);
+
+                book.IsBorrowed = true;
+
                 await _context.SaveChangesAsync();
+
+                await transaction.CommitAsync();
+
+                return loan;
             }
             catch (Exception ex)
             {
+                await transaction.RollbackAsync(); 
                 _logger.LogError(ex, "Error adding a new loan");
                 throw; 
             }
         }
 
-        public async Task UpdateLoanAsync(Loan loan)
+        public async Task UpdateLoanAsync(int id, Loan loan)
         {
             try
             {
-                _context.Loans.Update(loan);
+                var existingLoan = await _context.Loans.FindAsync(id);
+                if (existingLoan == null)
+                {
+                    throw new KeyNotFoundException($"Loan with ID {id} does not exist.");
+                }
+
+
+                if ( !existingLoan.IsReturned && loan.IsReturned && loan.ReturnDate.HasValue)
+                {
+                    var book = await _context.Books.FindAsync(existingLoan.BookId);
+                    if (book == null)
+                    {
+                        throw new KeyNotFoundException($"Book with ID {existingLoan.BookId} does not exist.");
+                    }
+
+                    book.IsBorrowed = false;
+                }
+
+                _mapper.Map(loan, existingLoan);
+
                 await _context.SaveChangesAsync();
             }
             catch (Exception ex)

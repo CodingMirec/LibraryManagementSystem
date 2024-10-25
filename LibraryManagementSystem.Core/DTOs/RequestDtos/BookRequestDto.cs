@@ -1,8 +1,7 @@
-﻿namespace LibraryManagementSystem.Core.DTOs
+﻿namespace LibraryManagementSystem.Core.DTOs.RequestDtos
 {
-    public class BookDTO
+    public class BookRequestDto
     {
-        public int Id { get; set; }
         public string Title { get; set; }
         public string Author { get; set; }
         public bool IsBorrowed { get; set; }

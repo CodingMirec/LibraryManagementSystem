@@ -1,14 +1,12 @@
 ﻿using FluentValidation;
+using LibraryManagementSystem.Core.DTOs.RequestDtos;
 
 namespace LibraryManagementSystem.Core.DTOs.Validators
 {
-    public class UserDTOValidator : AbstractValidator<UserDTO>
+    public class UserDTOValidator : AbstractValidator<UserRequestDto>
     {
         public UserDTOValidator()
         {
-            RuleFor(x => x.Id)
-            .GreaterThan(0).WithMessage("Id must be a valid positive integer.");
-
             RuleFor(x => x.FirstName)
                 .NotEmpty().WithMessage("First name is required.")
                 .Matches(@"^[a-zA-Z'-]+$").WithMessage("First name can contain only letters, apostrophes, hyphens, and spaces.")
