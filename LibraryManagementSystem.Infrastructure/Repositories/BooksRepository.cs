@@ -59,13 +59,15 @@ namespace LibraryManagementSystem.Infrastructure.Repositories
             }
         }
 
-        public async Task UpdateBookAsync(int id, Book book)
+        public async Task<Book> UpdateBookAsync(int id, Book book)
         {
             try
             {
                 book.Id = id;
                 _context.Books.Update(book);
                 await _context.SaveChangesAsync();
+
+                return book;
             }
             catch (Exception ex)
             {
@@ -74,7 +76,7 @@ namespace LibraryManagementSystem.Infrastructure.Repositories
             }
         }
 
-        public async Task DeleteBookAsync(int id)
+        public async Task<Book> DeleteBookAsync(int id)
         {
             try
             {
@@ -83,10 +85,13 @@ namespace LibraryManagementSystem.Infrastructure.Repositories
                 {
                     _context.Books.Remove(book);
                     await _context.SaveChangesAsync();
+
+                    return book;
                 }
                 else
                 {
                     _logger.LogWarning($"Book with ID {id} not found for deletion");
+                    return book;
                 }
             }
             catch (Exception ex)

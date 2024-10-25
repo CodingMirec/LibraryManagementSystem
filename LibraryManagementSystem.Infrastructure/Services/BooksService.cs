@@ -78,7 +78,7 @@ namespace LibraryManagementSystem.Infrastructure.Services
             }
         }
 
-        public async Task UpdateBookAsync(int id, BookRequestDto bookDto)
+        public async Task<BookResponseDto> UpdateBookAsync(int id, BookRequestDto bookDto)
         {
             if (bookDto == null)
             {
@@ -95,8 +95,10 @@ namespace LibraryManagementSystem.Infrastructure.Services
             try
             {
                 var book = _mapper.Map<Book>(bookDto);
-                
                 await _bookRepository.UpdateBookAsync(id, book);
+
+                var bookResponseDto = _mapper.Map<BookResponseDto>(book);
+                return bookResponseDto;
             }
             catch (Exception ex)
             {
@@ -105,7 +107,7 @@ namespace LibraryManagementSystem.Infrastructure.Services
             }
         }
 
-        public async Task DeleteBookAsync(int id)
+        public async Task<BookResponseDto> DeleteBookAsync(int id)
         {
             if (id <= 0)
             {
@@ -115,7 +117,10 @@ namespace LibraryManagementSystem.Infrastructure.Services
 
             try
             {
-                await _bookRepository.DeleteBookAsync(id);
+                var book = await _bookRepository.DeleteBookAsync(id);
+                var bookResponseDto = _mapper.Map<BookResponseDto>(book);
+
+                return bookResponseDto;
             }
             catch (Exception ex)
             {

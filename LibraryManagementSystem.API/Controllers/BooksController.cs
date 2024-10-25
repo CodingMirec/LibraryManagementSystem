@@ -85,8 +85,15 @@ namespace LibraryManagementSystem.API.Controllers
 
             try
             {
-                await _bookService.UpdateBookAsync(id, bookDto);
-                return NoContent();
+                var updatedBook = await _bookService.UpdateBookAsync(id, bookDto);
+
+                if (updatedBook == null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(updatedBook);
+
             }
             catch (ArgumentException ex)
             {
@@ -103,8 +110,14 @@ namespace LibraryManagementSystem.API.Controllers
         {
             try
             {
-                await _bookService.DeleteBookAsync(id);
-                return NoContent();
+                var deletedBook = await _bookService.DeleteBookAsync(id);
+
+                if (deletedBook == null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(deletedBook);
             }
             catch (ArgumentException ex)
             {

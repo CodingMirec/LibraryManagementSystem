@@ -284,7 +284,7 @@ namespace LibraryManagementSystem.UnitTests.ServicesTests
 
             _mockBookRepository
                 .Setup(repo => repo.UpdateBookAsync(id, book))
-                .Returns(Task.CompletedTask);
+                .ReturnsAsync(book);
 
             // Act
             await _bookService.UpdateBookAsync(id, bookDto);
@@ -389,10 +389,16 @@ namespace LibraryManagementSystem.UnitTests.ServicesTests
         {
             // Arrange
             var bookId = 1;
+            var bookResponseDto = new Book 
+            {
+                Id = bookId,
+                Title = "Test Book",
+                Author = "Test Author"
+            };
 
             _mockBookRepository
                 .Setup(repo => repo.DeleteBookAsync(bookId))
-                .Returns(Task.CompletedTask);
+                .ReturnsAsync(bookResponseDto);
 
             // Act
             await _bookService.DeleteBookAsync(bookId);

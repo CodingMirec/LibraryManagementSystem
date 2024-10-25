@@ -12,6 +12,9 @@ using LibraryManagementSystem.Core.DTOs.Validators;
 using FluentValidation;
 using Microsoft.OpenApi.Models;
 using LibraryManagementSystem.Core.DTOs.RequestDtos;
+using Hangfire;
+using Microsoft.Extensions.Configuration;
+using Hangfire.PostgreSql;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,6 +27,7 @@ builder.Services.AddScoped<ILoansRepository, LoansRepository>();
 builder.Services.AddScoped<IBooksService, BooksService>();
 builder.Services.AddScoped<IUsersService, UsersService>();
 builder.Services.AddScoped<ILoansService, LoansService>();
+builder.Services.AddScoped<NotificationService>();
 
 builder.Host.UseSerilog((context, configuration) =>
     configuration.ReadFrom.Configuration(context.Configuration));
@@ -53,6 +57,12 @@ builder.Services.AddSwaggerGen(c =>
 builder.Services.AddDbContext<LibraryDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("LibraryDb")));
 
+builder.Services.AddHangfire(config =>
+    config.UsePostgreSqlStorage(c =>
+        c.UseNpgsqlConnection(builder.Configuration.GetConnectionString("LibraryDb"))));
+
+builder.Services.AddHangfireServer();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -74,4 +84,14 @@ app.UseAuthorization();
 
 app.MapControllers();
 
+app.UseHangfireDashboard();
+
+RecurringJob.RemoveIfExists("TestJob");
+
+RecurringJob.AddOrUpdate<NotificationService>(
+    service => service.CheckDueDates(),
+    Cron.Daily);
+
 app.Run();
+
+public partial class Program { }

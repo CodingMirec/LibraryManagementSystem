@@ -8,7 +8,7 @@ namespace LibraryManagementSystem.Core.Interfaces.Services
         Task<IEnumerable<BookResponseDto>> GetAllBooksAsync();
         Task<BookResponseDto> GetBookByIdAsync(int id);
         Task<BookResponseDto> AddBookAsync(BookRequestDto bookDto);
-        Task UpdateBookAsync(int id, BookRequestDto bookDto);
-        Task DeleteBookAsync(int id);
+        Task<BookResponseDto> UpdateBookAsync(int id, BookRequestDto bookDto);
+        Task<BookResponseDto> DeleteBookAsync(int id);
     }
 }
