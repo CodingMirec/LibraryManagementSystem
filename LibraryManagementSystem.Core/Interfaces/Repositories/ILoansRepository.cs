@@ -9,6 +9,7 @@ namespace LibraryManagementSystem.Core.Interfaces.Repositories
         Task<Loan> AddLoanAsync(Loan loan);
         Task UpdateLoanAsync(int id, Loan loan);
         Task DeleteLoanAsync(int id);
+        Task<IEnumerable<Loan>> GetLoansDueTomorrowAsync();
         Task<IEnumerable<Loan>> GetLoansByUserIdAsync(int userId);
         Task<IEnumerable<Loan>> GetLoansByBookIdAsync(int bookId);
     }

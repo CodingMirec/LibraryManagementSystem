@@ -138,6 +138,23 @@ namespace LibraryManagementSystem.Infrastructure.Repositories
             }
         }
 
+        public async Task<IEnumerable<Loan>> GetLoansDueTomorrowAsync()
+        {
+            try
+            {
+                return await _context.Loans
+                .Where(loan => loan.DueDate.Date == DateTime.Now.AddDays(1).Date)
+                .Include(loan => loan.User)
+                .Include(loan => loan.Book)
+                .ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error retrieving loans due tomorrow");
+                throw;
+            }
+        }
+
         public async Task<IEnumerable<Loan>> GetLoansByUserIdAsync(int userId)
         {
             try

@@ -1,30 +1,38 @@
-﻿using LibraryManagementSystem.Core.Models;
-using LibraryManagementSystem.Infrastructure.Data;
-using Microsoft.EntityFrameworkCore;
+﻿using LibraryManagementSystem.Core.Interfaces.Repositories;
+using LibraryManagementSystem.Core.Interfaces.Services;
+using LibraryManagementSystem.Core.Models;
+using Microsoft.Extensions.Logging;
 
 namespace LibraryManagementSystem.Infrastructure.Services
 {
-    public class NotificationService
+    public class NotificationService : INotificationService
     {
-        private readonly LibraryDbContext _context;
+        private readonly ILoansRepository _loanRepository;
+        private readonly ILogger<NotificationService> _logger;
 
-        public NotificationService(LibraryDbContext context)
+
+        public NotificationService(ILoansRepository loanRepository, ILogger<NotificationService>  logger)
         {
-            _context = context;
+            _loanRepository = loanRepository;
+            _logger = logger;
         }
 
         public async Task CheckDueDates()
         {
-            var dueLoans = await _context.Loans
-                .Where(loan => loan.DueDate.Date == DateTime.Now.AddDays(1).Date)
-                .Include(loan => loan.User) 
-                .Include(loan => loan.Book)
-                .ToListAsync();
-
-            foreach (var loan in dueLoans)
+            try
             {
-                SimulateSendNotification(loan.User, loan);
+                var dueLoans = await _loanRepository.GetLoansDueTomorrowAsync();
+                _logger.LogInformation("{Count} loan(s) are due tomorrow.", dueLoans.Count());
+                foreach (var loan in dueLoans)
+                {
+                    SimulateSendNotification(loan.User, loan);
+                }
             }
+            catch (Exception ex) {
+                _logger.LogError(ex, "Error sending the notification to the users.");
+                throw;
+            }
+            
         }
 
         private void SimulateSendNotification(User user, Loan loan)
