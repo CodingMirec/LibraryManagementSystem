@@ -7,7 +7,7 @@ The Library Management System is a comprehensive solution for managing library o
 * Book management (CRUD)
 * User management (CRUD)
 * Loan processing (CRUD + functionality for setting the book as burrowed/returned)
-* Automated notifications for due dates (Notification only mocked)
+* Automated notifications for due dates (Notification only mocked) Dashboard - /hangfire
 * RESTful API for integration with other systems
 * Robust error handling and logging
 
@@ -50,6 +50,7 @@ The project is organized into multiple sub-projects:
     1. Make sure you have configured your database settings in the `appsettings.json` file. 
     (Don't change the connection string to use the hosted database).
     2. Start the API project using `dotnet run` (from the `LibraryManagementSystem.API` directory).
+    3. Swagger is accessible from root, Hangfire dashboard access by /hangfire 
 * **Running Tests:**
     1. Execute the integration tests using `dotnet test` (from the `LibraryManagementSystem.IntegrationTests` directory).
     2. Run the unit tests using `dotnet test` (from the `LibraryManagementSystem.UnitTests` directory).
