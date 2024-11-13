@@ -85,6 +85,8 @@ namespace LibraryManagementSystem.Infrastructure.Repositories
 
         public async Task UpdateLoanAsync(int id, Loan loan)
         {
+            using var transaction = await _context.Database.BeginTransactionAsync();
+
             try
             {
                 var existingLoan = await _context.Loans.FindAsync(id);
@@ -108,9 +110,13 @@ namespace LibraryManagementSystem.Infrastructure.Repositories
                 _mapper.Map(loan, existingLoan);
 
                 await _context.SaveChangesAsync();
+
+                await transaction.CommitAsync();
+
             }
             catch (Exception ex)
             {
+                await transaction.RollbackAsync();
                 _logger.LogError(ex, "Error updating the loan");
                 throw; 
             }
