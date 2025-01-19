@@ -42,6 +42,7 @@ builder.Services.AddScoped<IValidator<BookRequestDto>, BookDTOValidator>();
 builder.Services.AddScoped<IValidator<UserRequestDto>, UserDTOValidator>();
 builder.Services.AddScoped<IValidator<LoanRequestDto>, LoanDTOValidator>();
 
+builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>

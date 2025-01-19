@@ -24,7 +24,7 @@ public partial class LibraryDbContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseNpgsql("Host=dpg-csbs7n3tq21c73a7crng-a.frankfurt-postgres.render.com;Port=5432;Database=lib_man_db;Username=lib_man_user;Password=KJNHNKKChA6dQ6OZpC7hteFpUdi6OzJi;Ssl Mode=Require");
+        => optionsBuilder.UseNpgsql("Host=safely-growing-rattlesnake.data-1.use1.tembo.io;Port=5432;Database=postgres;Username=postgres;Password=cYNY9tJpIB05gzTQ;SslMode=Require");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
